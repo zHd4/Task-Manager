@@ -1,6 +1,7 @@
 plugins {
 	application
 	checkstyle
+	jacoco
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
 }
@@ -53,4 +54,10 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.jacocoTestReport {
+	reports {
+		xml.required = true
+	}
 }
