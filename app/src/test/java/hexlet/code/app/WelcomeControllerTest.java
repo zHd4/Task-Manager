@@ -16,7 +16,7 @@ public class WelcomeControllerTest {
 
     @Test
     public void testIndex() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/welcome"))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }
