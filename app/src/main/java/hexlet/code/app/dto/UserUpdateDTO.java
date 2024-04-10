@@ -10,6 +10,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Setter
 public class UserUpdateDTO {
     @Email
+    @NotNull
     private JsonNullable<String> email;
 
     @NotNull
