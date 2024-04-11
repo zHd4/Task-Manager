@@ -41,14 +41,14 @@ dependencies {
 
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
-	testImplementation("org.projectlombok:lombok:1.18.28")
+	testImplementation("org.projectlombok:lombok:1.18.30")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
 
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("com.h2database:h2:2.2.224")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	annotationProcessor("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok:1.18.30")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
