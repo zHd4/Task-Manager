@@ -41,6 +41,7 @@ dependencies {
 
 	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
 	implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
+	testImplementation("org.projectlombok:lombok:1.18.28")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
 
 	compileOnly("org.projectlombok:lombok")
