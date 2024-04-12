@@ -68,7 +68,7 @@ public class UsersControllerTest {
     public void testIndex() throws Exception {
         userRepository.save(testUser);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users"))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -81,7 +81,7 @@ public class UsersControllerTest {
     public void testShow() throws Exception {
         userRepository.save(testUser);
 
-        MvcResult result = mockMvc.perform(get("/users/{id}", testUser.getId()))
+        MvcResult result = mockMvc.perform(get("/api/users/{id}", testUser.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -96,7 +96,7 @@ public class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        MockHttpServletRequestBuilder request = post("/users")
+        MockHttpServletRequestBuilder request = post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testUser));
 
@@ -123,7 +123,7 @@ public class UsersControllerTest {
         userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
         userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
 
-        MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
+        MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData));
 
@@ -147,7 +147,7 @@ public class UsersControllerTest {
         UserUpdateDTO userData = new UserUpdateDTO();
         userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
 
-        MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
+        MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData));
 
@@ -171,7 +171,7 @@ public class UsersControllerTest {
         UserUpdateDTO userData = new UserUpdateDTO();
         userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
 
-        MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
+        MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData));
 
@@ -192,7 +192,7 @@ public class UsersControllerTest {
     public void testDelete() throws Exception {
         userRepository.save(testUser);
 
-        mockMvc.perform(delete("/users/{id}", testUser.getId()))
+        mockMvc.perform(delete("/api/users/{id}", testUser.getId()))
                 .andExpect(status().isNoContent());
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
