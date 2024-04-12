@@ -161,4 +161,28 @@ public class UsersControllerTest {
         assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
         assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(userData.getPassword().get()));
     }
+
+    @Test
+    public void testUpdateWithoutPassword() throws Exception {
+        userRepository.save(testUser);
+
+        UserUpdateDTO userData = new UserUpdateDTO();
+        userData.setEmail(JsonNullable.of(faker.internet().emailAddress()));
+
+        MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userData));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        Optional<User> userOptional = userRepository.findById(testUser.getId());
+
+        assertThat(userOptional.isPresent()).isTrue();
+
+        User user = userOptional.get();
+
+        assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
+        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(testUser.getPassword()));
+    }
 }
