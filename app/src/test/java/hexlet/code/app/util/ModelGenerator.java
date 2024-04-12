@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class ModelGenerator {
-    private final Faker faker = new Faker();
+    private static final Faker faker = new Faker();
 
     private Model<User> userModel;
 
