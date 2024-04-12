@@ -1,5 +1,6 @@
 package hexlet.code.app.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
@@ -10,13 +11,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @SpringBootTest
@@ -24,6 +32,9 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 public class UsersControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -69,5 +80,26 @@ public class UsersControllerTest {
                 v -> v.node("lastName").isEqualTo(testUser.getLastName()),
                 v -> v.node("email").isEqualTo(testUser.getEmail())
         );
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        MockHttpServletRequestBuilder request = post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testUser));
+
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
+
+        Optional<User> userOptional = userRepository.findByEmail(testUser.getEmail());
+
+        assertThat(userOptional.isPresent()).isTrue();
+
+        User user = userOptional.get();
+
+        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
+        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
+        assertThat(user.getPassword()).isEqualTo(testUser.getPassword());
     }
 }
