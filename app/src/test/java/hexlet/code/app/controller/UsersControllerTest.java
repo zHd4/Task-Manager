@@ -1,6 +1,7 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
@@ -96,23 +97,33 @@ public class UsersControllerTest {
 
     @Test
     public void testCreate() throws Exception {
+        UserCreateDTO userData = new UserCreateDTO();
+
+        userData.setFirstName(FAKER.name().firstName());
+        userData.setLastName(FAKER.name().lastName());
+        userData.setEmail(FAKER.internet().emailAddress());
+        userData.setPassword(FAKER.internet().password(5, 30));
+
+        String json = objectMapper.writeValueAsString(userData);
+
         MockHttpServletRequestBuilder request = post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testUser));
+                .content(json);
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        Optional<User> userOptional = userRepository.findByEmail(testUser.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(userData.getEmail());
 
         assertThat(userOptional.isPresent()).isTrue();
 
         User user = userOptional.get();
 
-        assertThat(user.getFirstName()).isEqualTo(testUser.getFirstName());
-        assertThat(user.getLastName()).isEqualTo(testUser.getLastName());
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(user.getPassword()).isEqualTo(testUser.getPassword());
+        assertThat(user.getFirstName()).isEqualTo(userData.getFirstName());
+        assertThat(user.getLastName()).isEqualTo(userData.getLastName());
+        assertThat(user.getEmail()).isEqualTo(userData.getEmail());
+
+        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(userData.getPassword()));
     }
 
     @Test
