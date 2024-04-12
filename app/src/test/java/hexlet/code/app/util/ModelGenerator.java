@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class ModelGenerator {
-    private static final Faker faker = new Faker();
+    private static final Faker FAKER = new Faker();
 
     private Model<User> userModel;
 
@@ -20,10 +20,10 @@ public class ModelGenerator {
     private void init() {
         userModel = Instancio.of(User.class)
                 .ignore(Select.field(User::getId))
-                .supply(Select.field(User::getFirstName), () -> faker.name().firstName())
-                .supply(Select.field(User::getLastName), () -> faker.name().lastName())
-                .supply(Select.field(User::getEmail), () -> faker.internet().emailAddress())
-                .supply(Select.field(User::getPassword), () -> faker.internet().password(5, 30))
+                .supply(Select.field(User::getFirstName), () -> FAKER.name().firstName())
+                .supply(Select.field(User::getLastName), () -> FAKER.name().lastName())
+                .supply(Select.field(User::getEmail), () -> FAKER.internet().emailAddress())
+                .supply(Select.field(User::getPassword), () -> FAKER.internet().password(5, 30))
                 .toModel();
     }
 }

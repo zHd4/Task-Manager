@@ -37,7 +37,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UsersControllerTest {
-    private static final Faker faker = new Faker();
+    private static final Faker FAKER = new Faker();
 
     @Autowired
     private MockMvc mockMvc;
@@ -120,8 +120,8 @@ public class UsersControllerTest {
         userRepository.save(testUser);
         UserUpdateDTO userData = new UserUpdateDTO();
 
-        userData.setEmail(JsonNullable.of(faker.internet().emailAddress()));
-        userData.setPassword(JsonNullable.of(faker.internet().password(5, 30)));
+        userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
+        userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
 
         MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -145,7 +145,7 @@ public class UsersControllerTest {
         userRepository.save(testUser);
 
         UserUpdateDTO userData = new UserUpdateDTO();
-        userData.setPassword(JsonNullable.of(faker.internet().password(5, 30)));
+        userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
 
         MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +169,7 @@ public class UsersControllerTest {
         userRepository.save(testUser);
 
         UserUpdateDTO userData = new UserUpdateDTO();
-        userData.setEmail(JsonNullable.of(faker.internet().emailAddress()));
+        userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
 
         MockHttpServletRequestBuilder request = put("/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
