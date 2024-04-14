@@ -1,6 +1,7 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.component.DefaultUserProperties;
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
 import hexlet.code.app.mapper.UserMapper;
@@ -56,6 +57,9 @@ public class UsersControllerTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DefaultUserProperties defaultUserProperties;
 
     private User testUser;
 
@@ -123,6 +127,17 @@ public class UsersControllerTest {
         assertThat(user.getEmail()).isEqualTo(userData.getEmail());
 
         assertThat(user.getPassword()).isNotEqualTo(userData.getPassword());
+    }
+
+    @Test
+    public void testCreateDefaultUser() throws Exception {
+        String email = defaultUserProperties.getEmail();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        assertThat(userOptional.isPresent()).isTrue();
+        User user = userOptional.get();
+
+        assertThat(user.getPassword()).isNotEqualTo(defaultUserProperties.getPassword());
     }
 
     @Test
