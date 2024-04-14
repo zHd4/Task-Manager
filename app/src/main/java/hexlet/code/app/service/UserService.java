@@ -1,5 +1,6 @@
 package hexlet.code.app.service;
 
+import hexlet.code.app.component.DefaultUserProperties;
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
@@ -9,6 +10,7 @@ import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private DefaultUserProperties defaultUserProperties;
 
     public List<UserDTO> getAll() {
         return userRepository.findAll().stream()
@@ -41,6 +46,27 @@ public class UserService {
         userRepository.save(user);
 
         return userMapper.map(user);
+    }
+
+    @Bean
+    private void createDefaultUser() {
+        String email = defaultUserProperties.getEmail();
+
+        if (userRepository.findByEmail(email).isEmpty()) {
+            UserCreateDTO userData = new UserCreateDTO();
+
+            userData.setFirstName("");
+            userData.setLastName("");
+            userData.setEmail(email);
+
+            String password = defaultUserProperties.getPassword();
+            String passwordDigest = passwordEncoder.encode(password);
+
+            userData.setPassword(passwordDigest);
+
+            User user = userMapper.map(userData);
+//            userRepository.save(user);
+        }
     }
 
     public UserDTO findById(Long id) {
