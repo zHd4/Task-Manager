@@ -26,7 +26,7 @@ import java.util.Collection;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class User implements UserDetails {
+public class User implements BaseEntity, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
