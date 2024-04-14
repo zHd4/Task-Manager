@@ -14,7 +14,7 @@ import org.mapstruct.ReportingPolicy;
         uses = { JsonNullableMapper.class, ReferenceMapper.class },
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
+        unmappedTargetPolicy = ReportingPolicy.WARN
 )
 public abstract class UserMapper {
     public abstract User map(UserCreateDTO dto);
