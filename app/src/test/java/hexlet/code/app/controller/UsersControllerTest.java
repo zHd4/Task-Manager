@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -48,6 +49,9 @@ public class UsersControllerTest {
 
     @Autowired
     private ModelGenerator modelGenerator;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private User testUser;
 
@@ -168,7 +172,13 @@ public class UsersControllerTest {
 
     @Test
     public void testUpdateWithoutPassword() throws Exception {
+        String password = testUser.getPassword();
+        String passwordDigest = passwordEncoder.encode(password);
+
+        testUser.setPassword(passwordDigest);
         userRepository.save(testUser);
+
+        testUser.setPassword(password);
 
         UserUpdateDTO userData = new UserUpdateDTO();
         userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
