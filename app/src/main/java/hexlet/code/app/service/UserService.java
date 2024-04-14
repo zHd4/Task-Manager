@@ -7,6 +7,7 @@ import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,8 +56,13 @@ public class UserService {
 
         userMapper.update(userData, user);
 
-        if (userData.getPassword().isPresent()) {
-            user.setPassword(userData.getPassword().get());
+        JsonNullable<String> passwordNullable = userData.getPassword();
+
+        if (passwordNullable != null && passwordNullable.isPresent()) {
+            String password = userData.getPassword().get();
+            String passwordDigest = passwordEncoder.encode(password);
+
+            user.setPassword(passwordDigest);
         }
 
         userRepository.save(user);
