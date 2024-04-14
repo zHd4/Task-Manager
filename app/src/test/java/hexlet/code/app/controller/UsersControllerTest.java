@@ -215,10 +215,6 @@ public class UsersControllerTest {
 
         User user = userOptional.get();
 
-        System.out.println("Actual: " + user.getEmail());
-        System.out.println("Expected: " + userData.getEmail().get());
-        System.out.println("\n\n");
-
         assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
         assertThat(user.getPassword()).isNotEqualTo(testUser.getPassword());
     }
