@@ -65,7 +65,7 @@ public class UserService {
             userData.setPassword(passwordDigest);
 
             User user = userMapper.map(userData);
-//            userRepository.save(user);
+            userRepository.save(user);
         }
     }
 
