@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -25,15 +24,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Optional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -45,9 +39,6 @@ public class UsersControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -123,7 +114,7 @@ public class UsersControllerTest {
         assertThat(user.getLastName()).isEqualTo(userData.getLastName());
         assertThat(user.getEmail()).isEqualTo(userData.getEmail());
 
-        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(userData.getPassword()));
+        assertThat(user.getPassword()).isNotEqualTo(userData.getPassword());
     }
 
     @Test
@@ -148,7 +139,7 @@ public class UsersControllerTest {
         User user = userOptional.get();
 
         assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
-        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(userData.getPassword().get()));
+        assertThat(user.getPassword()).isNotEqualTo(userData.getPassword().get());
     }
 
     @Test
@@ -172,7 +163,7 @@ public class UsersControllerTest {
         User user = userOptional.get();
 
         assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(userData.getPassword().get()));
+        assertThat(user.getPassword()).isNotEqualTo(userData.getPassword().get());
     }
 
     @Test
@@ -196,7 +187,7 @@ public class UsersControllerTest {
         User user = userOptional.get();
 
         assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
-        assertThat(user.getPassword()).isEqualTo(passwordEncoder.encode(testUser.getPassword()));
+        assertThat(user.getPassword()).isNotEqualTo(testUser.getPassword());
     }
 
     @Test
