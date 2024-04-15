@@ -22,13 +22,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 
 import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -72,7 +72,10 @@ public class UsersControllerTest {
     public void testIndex() throws Exception {
         userRepository.save(testUser);
 
-        MvcResult result = mockMvc.perform(get("/api/users").with(jwt()))
+        MockHttpServletRequestBuilder request = get("/api/users")
+                .with(SecurityMockMvcRequestPostProcessors.user("admin"));
+
+        MvcResult result = mockMvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
@@ -92,7 +95,10 @@ public class UsersControllerTest {
     public void testShow() throws Exception {
         userRepository.save(testUser);
 
-        MvcResult result = mockMvc.perform(get("/api/users/{id}", testUser.getId()).with(jwt()))
+        MockHttpServletRequestBuilder request = get("/api/users/{id}", testUser.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        MvcResult result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -119,7 +125,7 @@ public class UsersControllerTest {
         MockHttpServletRequestBuilder request = post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json)
-                .with(jwt());
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
@@ -159,7 +165,7 @@ public class UsersControllerTest {
         MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData))
-                .with(jwt());
+                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
@@ -184,7 +190,7 @@ public class UsersControllerTest {
         MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData))
-                .with(jwt());
+                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
@@ -215,7 +221,7 @@ public class UsersControllerTest {
         MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userData))
-                .with(jwt());
+                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
 
         mockMvc.perform(request)
                 .andExpect(status().isOk());
@@ -234,7 +240,10 @@ public class UsersControllerTest {
     public void testDelete() throws Exception {
         userRepository.save(testUser);
 
-        mockMvc.perform(delete("/api/users/{id}", testUser.getId()).with(jwt()))
+        MockHttpServletRequestBuilder request = delete("/api/users/{id}", testUser.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
+
+        mockMvc.perform(request)
                 .andExpect(status().isNoContent());
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
