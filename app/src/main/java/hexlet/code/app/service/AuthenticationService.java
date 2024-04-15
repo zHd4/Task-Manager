@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
+public class AuthenticationService {
     @Autowired
     private JWTUtils jwtUtils;
 
