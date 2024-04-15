@@ -46,6 +46,6 @@ public class LoginTest {
 
         String body = result.getResponse().getContentAsString();
 
-        assertThat(body).matches("/(^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$)/gm");
+        assertThat(body).matches("(^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$)");
     }
 }
