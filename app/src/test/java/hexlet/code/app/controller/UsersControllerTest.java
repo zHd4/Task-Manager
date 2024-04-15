@@ -131,7 +131,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void testCreateDefaultUser() throws Exception {
+    public void testCreateDefaultUser() {
         String email = defaultUserProperties.getEmail();
         Optional<User> userOptional = userRepository.findByEmail(email);
 
