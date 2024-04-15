@@ -82,6 +82,13 @@ public class UsersControllerTest {
     }
 
     @Test
+    public void testUnauthorizedAccess() throws Exception {
+        mockMvc.perform(get("/api/users"))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andReturn();
+    }
+
+    @Test
     public void testShow() throws Exception {
         userRepository.save(testUser);
 
