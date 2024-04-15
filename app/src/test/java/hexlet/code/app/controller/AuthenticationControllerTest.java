@@ -30,7 +30,7 @@ public class AuthenticationControllerTest {
     private DefaultUserProperties defaultUserProperties;
 
     @Test
-    public void testLogin() throws Exception {
+    public void testCreate() throws Exception {
         AuthRequest authRequest = new AuthRequest();
 
         authRequest.setUsername(defaultUserProperties.getEmail());
