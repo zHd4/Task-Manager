@@ -58,8 +58,9 @@ public class UserService {
 
     private void checkModificationAccess(User user) {
         User currentUser = userUtils.getCurrentUser();
+        User admin = userRepository.findByEmail(defaultUserProperties.getEmail()).get();
 
-        if (user.getId() != currentUser.getId()) {
+        if (user.getId() != currentUser.getId() && admin.getId() != currentUser.getId()) {
             throw new ResourceForbiddenException("Access denied");
         }
     }
