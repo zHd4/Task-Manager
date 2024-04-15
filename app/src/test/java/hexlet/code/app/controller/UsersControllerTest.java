@@ -82,7 +82,7 @@ public class UsersControllerTest {
     }
 
     @Test
-    public void testUnauthorizedAccess() throws Exception {
+    public void testUnauthenticatedAccess() throws Exception {
         mockMvc.perform(get("/api/users"))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andReturn();
