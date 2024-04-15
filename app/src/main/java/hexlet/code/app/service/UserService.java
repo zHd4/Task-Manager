@@ -60,7 +60,9 @@ public class UserService {
         User currentUser = userUtils.getCurrentUser();
         User admin = userRepository.findByEmail(defaultUserProperties.getEmail()).get();
 
-        if (user.getId() != currentUser.getId() && admin.getId() != currentUser.getId()) {
+        if (currentUser == null
+                || (user.getId() != currentUser.getId()
+                && admin.getId() != currentUser.getId())) {
             throw new ResourceForbiddenException("Access denied");
         }
     }
