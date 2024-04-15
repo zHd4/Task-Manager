@@ -4,10 +4,12 @@ import hexlet.code.app.component.DefaultUserProperties;
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
+import hexlet.code.app.exception.ResourceForbiddenException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
 import hexlet.code.app.repository.UserRepository;
+import hexlet.code.app.util.UserUtils;
 import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,25 +30,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private UserUtils userUtils;
+
+    @Autowired
     private DefaultUserProperties defaultUserProperties;
-
-    public List<UserDTO> getAll() {
-        return userRepository.findAll().stream()
-                .map(userMapper::map)
-                .toList();
-    }
-
-    public UserDTO create(UserCreateDTO userData) {
-        User user = userMapper.map(userData);
-
-        String password = userData.getPassword();
-        String passwordDigest = passwordEncoder.encode(password);
-
-        user.setPassword(passwordDigest);
-        userRepository.save(user);
-
-        return userMapper.map(user);
-    }
 
     @Bean
     private void createDefaultUser() {
@@ -69,6 +56,32 @@ public class UserService {
         }
     }
 
+    private void checkModificationAccess(User user) {
+        User currentUser = userUtils.getCurrentUser();
+
+        if (user.getId() != currentUser.getId()) {
+            throw new ResourceForbiddenException("Access denied");
+        }
+    }
+
+    public List<UserDTO> getAll() {
+        return userRepository.findAll().stream()
+                .map(userMapper::map)
+                .toList();
+    }
+
+    public UserDTO create(UserCreateDTO userData) {
+        User user = userMapper.map(userData);
+
+        String password = userData.getPassword();
+        String passwordDigest = passwordEncoder.encode(password);
+
+        user.setPassword(passwordDigest);
+        userRepository.save(user);
+
+        return userMapper.map(user);
+    }
+
     public UserDTO findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -80,6 +93,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        checkModificationAccess(user);
         userMapper.update(userData, user);
 
         JsonNullable<String> passwordNullable = userData.getPassword();
@@ -99,6 +113,7 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        checkModificationAccess(user);
         userRepository.delete(user);
     }
 }
