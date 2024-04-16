@@ -37,8 +37,8 @@ public class Initializer implements ApplicationRunner {
         if (userRepository.findByEmail(email).isEmpty()) {
             UserCreateDTO userData = new UserCreateDTO();
 
-            userData.setFirstName("");
-            userData.setLastName("");
+            userData.setFirstName("John");
+            userData.setLastName("Doe");
             userData.setEmail(email);
 
             String password = defaultUserProperties.getPassword();
