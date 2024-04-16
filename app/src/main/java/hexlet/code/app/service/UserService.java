@@ -4,6 +4,7 @@ import hexlet.code.app.component.DefaultUserProperties;
 import hexlet.code.app.dto.UserCreateDTO;
 import hexlet.code.app.dto.UserDTO;
 import hexlet.code.app.dto.UserUpdateDTO;
+import hexlet.code.app.exception.ResourceAlreadyExistsException;
 import hexlet.code.app.exception.ResourceForbiddenException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
@@ -74,6 +75,10 @@ public class UserService {
     }
 
     public UserDTO create(UserCreateDTO userData) {
+        if (userRepository.findByEmail(userData.getEmail()).isPresent()) {
+            throw new ResourceAlreadyExistsException("User with this email already exists");
+        }
+
         User user = userMapper.map(userData);
 
         String password = userData.getPassword();
