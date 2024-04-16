@@ -36,27 +36,6 @@ public class UserService {
     @Autowired
     private DefaultUserProperties defaultUserProperties;
 
-    @Bean
-    private void createDefaultUser() {
-        String email = defaultUserProperties.getEmail();
-
-        if (userRepository.findByEmail(email).isEmpty()) {
-            UserCreateDTO userData = new UserCreateDTO();
-
-            userData.setFirstName("");
-            userData.setLastName("");
-            userData.setEmail(email);
-
-            String password = defaultUserProperties.getPassword();
-            String passwordDigest = passwordEncoder.encode(password);
-
-            userData.setPassword(passwordDigest);
-
-            User user = userMapper.map(userData);
-            userRepository.save(user);
-        }
-    }
-
     private void checkModificationAccess(User user) {
         User currentUser = userUtils.getCurrentUser();
         User admin = userRepository.findByEmail(defaultUserProperties.getEmail()).get();
