@@ -2,10 +2,12 @@ package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskStatusCreateDTO;
+import hexlet.code.app.dto.TaskStatusUpdateDTO;
 import hexlet.code.app.mapper.TaskStatusMapper;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.util.ModelGenerator;
+import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,12 +25,13 @@ import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TaskStatusesControllerTest {
+    private static final Faker FAKER = new Faker();
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -100,13 +103,45 @@ public class TaskStatusesControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
-        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findBySlug(dto.getSlug());
         assertThat(taskStatusOptional).isPresent();
 
         TaskStatus status = taskStatusOptional.get();
+        assertThat(status.getName()).isEqualTo(dto.getName());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        taskStatusRepository.save(testTaskStatus);
+
+        TaskStatusUpdateDTO dto = new TaskStatusUpdateDTO();
+        dto.setName(FAKER.text().text(4, 7));
+
+        MockHttpServletRequestBuilder request = put("/api/task_statuses/{id}", testTaskStatus.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray();
+
+        Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findById(testTaskStatus.getId());
+        assertThat(taskStatusOptional).isPresent();
+
+        TaskStatus status = taskStatusOptional.get();
 
         assertThat(status.getName()).isEqualTo(dto.getName());
+        assertThat(status.getSlug()).isEqualTo(testTaskStatus.getSlug());
     }
 }
