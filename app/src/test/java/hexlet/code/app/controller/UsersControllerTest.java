@@ -132,7 +132,7 @@ public class UsersControllerTest {
 
         Optional<User> userOptional = userRepository.findByEmail(userData.getEmail());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
 
         User user = userOptional.get();
 
@@ -148,7 +148,7 @@ public class UsersControllerTest {
         String email = defaultUserProperties.getEmail();
         Optional<User> userOptional = userRepository.findByEmail(email);
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
         User user = userOptional.get();
 
         assertThat(user.getPassword()).isNotEqualTo(defaultUserProperties.getPassword());
@@ -172,7 +172,7 @@ public class UsersControllerTest {
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
 
         User user = userOptional.get();
 
@@ -197,7 +197,7 @@ public class UsersControllerTest {
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
 
         User user = userOptional.get();
 
@@ -228,7 +228,7 @@ public class UsersControllerTest {
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
 
-        assertThat(userOptional.isPresent()).isTrue();
+        assertThat(userOptional).isPresent();
 
         User user = userOptional.get();
 
@@ -248,6 +248,6 @@ public class UsersControllerTest {
 
         Optional<User> userOptional = userRepository.findById(testUser.getId());
 
-        assertThat(userOptional.isEmpty()).isTrue();
+        assertThat(userOptional).isEmpty();
     }
 }
