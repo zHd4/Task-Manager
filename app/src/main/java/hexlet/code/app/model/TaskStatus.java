@@ -23,11 +23,11 @@ import java.time.LocalDate;
 public class TaskStatus implements BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private long id;
 
     @Size(min = 1)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Size(min = 1)
