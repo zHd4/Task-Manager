@@ -1,6 +1,7 @@
 package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.app.dto.TaskStatusCreateDTO;
 import hexlet.code.app.mapper.TaskStatusMapper;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.TaskStatusRepository;
@@ -11,14 +12,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -80,5 +86,27 @@ public class TaskStatusesControllerTest {
                 v -> v.node("name").isEqualTo(testTaskStatus.getName()),
                 v -> v.node("slug").isEqualTo(testTaskStatus.getSlug())
         );
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        TaskStatusCreateDTO dto = new TaskStatusCreateDTO();
+
+        dto.setName(testTaskStatus.getName());
+        dto.setSlug(testTaskStatus.getSlug());
+
+        MockHttpServletRequestBuilder request = post("/api/task_statuses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk());
+
+        Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findBySlug(dto.getSlug());
+        assertThat(taskStatusOptional).isPresent();
+
+        TaskStatus status = taskStatusOptional.get();
+
+        assertThat(status.getName()).isEqualTo(dto.getName());
     }
 }
