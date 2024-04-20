@@ -31,7 +31,7 @@ public class TaskStatus implements BaseEntity {
     private String name;
 
     @Size(min = 1)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String slug;
 
     @CreatedDate
