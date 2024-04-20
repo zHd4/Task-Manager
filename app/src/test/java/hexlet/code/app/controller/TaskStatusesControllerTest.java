@@ -147,7 +147,7 @@ public class TaskStatusesControllerTest {
         assertThat(status.getName()).isEqualTo(dto.getName());
         assertThat(status.getSlug()).isEqualTo(testTaskStatus.getSlug());
     }
-    
+
     @Test
     public void testDelete() throws Exception {
         taskStatusRepository.save(testTaskStatus);
