@@ -60,4 +60,25 @@ public class TaskStatusesControllerTest {
 
         assertThatJson(body).isArray();
     }
+
+
+    @Test
+    public void testShow() throws Exception {
+        taskStatusRepository.save(testTaskStatus);
+
+        MockHttpServletRequestBuilder request = get("/api/task_statuses/{id}", testTaskStatus.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("id").isEqualTo(testTaskStatus.getId()),
+                v -> v.node("name").isEqualTo(testTaskStatus.getName()),
+                v -> v.node("slug").isEqualTo(testTaskStatus.getSlug())
+        );
+    }
 }
