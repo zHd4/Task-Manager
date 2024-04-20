@@ -1,5 +1,6 @@
 package hexlet.code.app.util;
 
+import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class ModelGenerator {
     private static final Faker FAKER = new Faker();
 
     private Model<User> userModel;
+    private Model<TaskStatus> taskStatusModel;
 
     @PostConstruct
     private void init() {
@@ -25,5 +27,12 @@ public class ModelGenerator {
                 .supply(Select.field(User::getEmail), () -> FAKER.internet().emailAddress())
                 .supply(Select.field(User::getPassword), () -> FAKER.internet().password(5, 30))
                 .toModel();
+
+        taskStatusModel = Instancio.of(TaskStatus.class)
+                .ignore(Select.field(TaskStatus::getId))
+                .supply(Select.field(TaskStatus::getName), () -> FAKER.text().text(4, 7))
+                .supply(Select.field(TaskStatus::getSlug), () -> FAKER.text().text(4, 7))
+                .toModel();
+
     }
 }
