@@ -19,13 +19,16 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -62,7 +65,7 @@ public class TaskStatusesControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         MvcResult result = mockMvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
@@ -79,7 +82,7 @@ public class TaskStatusesControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         MvcResult result = mockMvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
@@ -104,7 +107,7 @@ public class TaskStatusesControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         MvcResult result = mockMvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
@@ -130,7 +133,7 @@ public class TaskStatusesControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         MvcResult result = mockMvc.perform(request)
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(status().isOk())
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
@@ -143,5 +146,18 @@ public class TaskStatusesControllerTest {
 
         assertThat(status.getName()).isEqualTo(dto.getName());
         assertThat(status.getSlug()).isEqualTo(testTaskStatus.getSlug());
+    }
+    
+    @Test
+    public void testDelete() throws Exception {
+        taskStatusRepository.save(testTaskStatus);
+
+        MockHttpServletRequestBuilder request = delete("/api/task_statuses")
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request).andExpect(status().isNoContent());
+
+        Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findById(testTaskStatus.getId());
+        assertThat(taskStatusOptional).isEmpty();
     }
 }
