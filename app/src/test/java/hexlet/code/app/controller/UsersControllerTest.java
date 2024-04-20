@@ -115,10 +115,10 @@ public class UsersControllerTest {
     public void testCreate() throws Exception {
         UserCreateDTO userData = new UserCreateDTO();
 
-        userData.setFirstName(FAKER.name().firstName());
-        userData.setLastName(FAKER.name().lastName());
-        userData.setEmail(FAKER.internet().emailAddress());
-        userData.setPassword(FAKER.internet().password(5, 30));
+        userData.setFirstName(testUser.getFirstName());
+        userData.setLastName(testUser.getLastName());
+        userData.setEmail(testUser.getEmail());
+        userData.setPassword(testUser.getPassword());
 
         String json = objectMapper.writeValueAsString(userData);
 
