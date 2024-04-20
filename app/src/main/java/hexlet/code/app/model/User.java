@@ -29,7 +29,7 @@ import java.util.Collection;
 public class User implements BaseEntity, UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private long id;
 
     @Column
