@@ -108,7 +108,7 @@ public class TaskStatusesControllerTest {
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         MvcResult result = mockMvc.perform(request)
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
