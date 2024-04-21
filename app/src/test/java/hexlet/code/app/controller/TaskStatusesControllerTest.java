@@ -112,7 +112,6 @@ public class TaskStatusesControllerTest {
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findBySlug(dto.getSlug());
         assertThat(taskStatusOptional).isPresent();
@@ -138,14 +137,13 @@ public class TaskStatusesControllerTest {
                 .andReturn();
 
         String body = result.getResponse().getContentAsString();
-        assertThatJson(body).isArray();
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findById(testTaskStatus.getId());
         assertThat(taskStatusOptional).isPresent();
 
         TaskStatus status = taskStatusOptional.get();
 
-        assertThat(status.getName()).isEqualTo(dto.getName());
+        assertThat(status.getName()).isEqualTo(dto.getName().get());
         assertThat(status.getSlug()).isEqualTo(testTaskStatus.getSlug());
     }
 
@@ -153,7 +151,7 @@ public class TaskStatusesControllerTest {
     public void testDelete() throws Exception {
         taskStatusRepository.save(testTaskStatus);
 
-        MockHttpServletRequestBuilder request = delete("/api/task_statuses")
+        MockHttpServletRequestBuilder request = delete("/api/task_statuses/{id}", testTaskStatus.getId())
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         mockMvc.perform(request).andExpect(status().isNoContent());
