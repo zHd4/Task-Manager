@@ -11,6 +11,7 @@ import net.datafaker.Faker;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -125,7 +126,7 @@ public class TaskStatusesControllerTest {
         taskStatusRepository.save(testTaskStatus);
 
         TaskStatusUpdateDTO dto = new TaskStatusUpdateDTO();
-        dto.setName(FAKER.text().text(4, 7));
+        dto.setName(JsonNullable.of(FAKER.text().text(4, 7)));
 
         MockHttpServletRequestBuilder request = put("/api/task_statuses/{id}", testTaskStatus.getId())
                 .contentType(MediaType.APPLICATION_JSON)
