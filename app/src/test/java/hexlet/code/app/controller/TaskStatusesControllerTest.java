@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
@@ -158,5 +159,14 @@ public class TaskStatusesControllerTest {
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findById(testTaskStatus.getId());
         assertThat(taskStatusOptional).isEmpty();
+    }
+
+    @Test
+    public void testDefaultStatuses() throws Exception {
+        assertThat(taskStatusRepository.findBySlug("draft")).isPresent();
+        assertThat(taskStatusRepository.findBySlug("to_review")).isPresent();
+        assertThat(taskStatusRepository.findBySlug("to_be_fixed")).isPresent();
+        assertThat(taskStatusRepository.findBySlug("to_publish")).isPresent();
+        assertThat(taskStatusRepository.findBySlug("published")).isPresent();
     }
 }
