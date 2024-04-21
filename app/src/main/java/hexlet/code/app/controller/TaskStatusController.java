@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +42,18 @@ public class TaskStatusController {
     }
 
     @GetMapping("/{id}")
-    TaskStatusDTO show(long id) {
+    TaskStatusDTO show(@PathVariable long id) {
         return taskStatusService.findById(id);
     }
 
     @PutMapping("/{id}")
-    TaskStatusDTO update(long id, @RequestBody @Valid TaskStatusUpdateDTO taskStatusData) {
+    TaskStatusDTO update(@PathVariable long id, @RequestBody @Valid TaskStatusUpdateDTO taskStatusData) {
         return taskStatusService.update(id, taskStatusData);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(long id) {
+    void delete(@PathVariable long id) {
         taskStatusService.delete(id);
     }
 }
