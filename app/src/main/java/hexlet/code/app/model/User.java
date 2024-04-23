@@ -47,9 +47,11 @@ public class User implements BaseEntity, UserDetails {
     private String password;
 
     @CreatedDate
+    @Column
     private LocalDate createdAt;
 
     @LastModifiedDate
+    @Column
     private LocalDate updatedAt;
 
     @Override
