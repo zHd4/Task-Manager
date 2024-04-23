@@ -35,5 +35,6 @@ public class TaskStatus implements BaseEntity {
     private String slug;
 
     @CreatedDate
+    @Column
     private LocalDate createdAt;
 }
