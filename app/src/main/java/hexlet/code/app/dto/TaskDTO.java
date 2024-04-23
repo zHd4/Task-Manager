@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Setter
 public class TaskDTO {
     private long id;
-    private int index;
+    private long index;
     private LocalDate createdAt;
     private long assigneeId;
     private String title;
