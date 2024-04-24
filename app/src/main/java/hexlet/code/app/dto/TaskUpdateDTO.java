@@ -9,7 +9,7 @@ import org.openapitools.jackson.nullable.JsonNullable;
 @Setter
 public class TaskUpdateDTO {
     @NotBlank
-    private String title;
+    private JsonNullable<String> title;
 
     private JsonNullable<String> content;
 }
