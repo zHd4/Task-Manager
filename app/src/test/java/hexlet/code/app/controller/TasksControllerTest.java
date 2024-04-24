@@ -24,6 +24,7 @@ import java.util.Optional;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -135,5 +136,18 @@ public class TasksControllerTest {
 
         assertThat(task.getName()).isEqualTo(dto.getTitle().get());
         assertThat(task.getDescription()).isEqualTo(dto.getContent().get());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        taskRepository.save(testTask);
+
+        MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", testTask.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request).andExpect(status().isNoContent());
+
+        Optional<Task> taskStatusOptional = taskRepository.findById(testTask.getId());
+        assertThat(taskStatusOptional).isEmpty();
     }
 }
