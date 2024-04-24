@@ -107,11 +107,8 @@ public class TaskStatusesControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
-        MvcResult result = mockMvc.perform(request)
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String body = result.getResponse().getContentAsString();
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findBySlug(dto.getSlug());
         assertThat(taskStatusOptional).isPresent();
@@ -132,11 +129,8 @@ public class TaskStatusesControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
-        MvcResult result = mockMvc.perform(request)
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String body = result.getResponse().getContentAsString();
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
 
         Optional<TaskStatus> taskStatusOptional = taskStatusRepository.findById(testTaskStatus.getId());
         assertThat(taskStatusOptional).isPresent();
