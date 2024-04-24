@@ -45,9 +45,6 @@ public class TasksControllerTest {
     @Autowired
     private TaskRepository taskRepository;
 
-    @Autowired
-    private TaskMapper taskMapper;
-
     private Task testTask;
 
     @BeforeEach
