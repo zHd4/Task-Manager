@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskCreateDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.model.Task;
+import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.repository.TaskRepository;
+import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.util.ModelGenerator;
 import org.instancio.Instancio;
+import org.instancio.Select;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -43,18 +46,23 @@ public class TasksControllerTest {
 
     @Autowired
     private TaskRepository taskRepository;
+    
+    @Autowired
+    private TaskStatusRepository taskStatusRepository;
 
     private Task testTask;
 
     @BeforeEach
     public void beforeEach() {
+        TaskStatus status = taskStatusRepository.findBySlug("draft").get();
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
+        
+        testTask.setTaskStatus(status);
+        taskRepository.save(testTask);
     }
 
     @Test
     public void testIndex() throws Exception {
-        taskRepository.save(testTask);
-
         MockHttpServletRequestBuilder request = get("/api/tasks")
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
@@ -69,8 +77,6 @@ public class TasksControllerTest {
 
     @Test
     public void testShow() throws Exception {
-        taskRepository.save(testTask);
-
         MockHttpServletRequestBuilder request = get("/api/tasks/{id}", testTask.getId())
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
@@ -110,8 +116,6 @@ public class TasksControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        taskRepository.save(testTask);
-
         TaskUpdateDTO dto = new TaskUpdateDTO();
 
         dto.setTitle(JsonNullable.of("New title"));
@@ -136,8 +140,6 @@ public class TasksControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        taskRepository.save(testTask);
-
         MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", testTask.getId())
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
