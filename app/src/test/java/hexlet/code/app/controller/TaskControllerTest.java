@@ -2,6 +2,7 @@ package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskCreateDTO;
+import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.repository.TaskRepository;
@@ -9,6 +10,7 @@ import hexlet.code.app.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -98,16 +101,39 @@ public class TaskControllerTest {
                 .content(objectMapper.writeValueAsString(dto))
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
-        MvcResult result = mockMvc.perform(request)
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String body = result.getResponse().getContentAsString();
+        mockMvc.perform(request)
+                .andExpect(status().isCreated());
 
         Optional<Task> taskOptional = taskRepository.findByName(dto.getTitle());
         assertThat(taskOptional).isPresent();
 
         Task task = taskOptional.get();
         assertThat(task.getTaskStatus().getSlug()).isEqualTo(dto.getStatus());
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        taskRepository.save(testTask);
+
+        TaskUpdateDTO dto = new TaskUpdateDTO();
+
+        dto.setTitle(JsonNullable.of("New title"));
+        dto.setContent(JsonNullable.of("New content"));
+
+        MockHttpServletRequestBuilder request = put("/api/tasks/{id}", testTask.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        Optional<Task> taskOptional = taskRepository.findById(testTask.getId());
+        assertThat(taskOptional).isPresent();
+
+        Task task = taskOptional.get();
+
+        assertThat(task.getName()).isEqualTo(dto.getTitle().get());
+        assertThat(task.getDescription()).isEqualTo(dto.getContent().get());
     }
 }
