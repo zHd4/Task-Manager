@@ -45,7 +45,7 @@ public class TasksControllerTest {
 
     @Autowired
     private TaskRepository taskRepository;
-    
+
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
@@ -55,7 +55,7 @@ public class TasksControllerTest {
     public void beforeEach() {
         TaskStatus status = taskStatusRepository.findBySlug("draft").get();
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
-        
+
         testTask.setTaskStatus(status);
         taskRepository.save(testTask);
     }
