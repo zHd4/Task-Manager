@@ -40,6 +40,7 @@ public class ModelGenerator {
                 .ignore(Select.field(Task::getId))
                 .supply(Select.field(Task::getName), () -> FAKER.text().text(10, 20))
                 .supply(Select.field(Task::getDescription), () -> FAKER.text().text())
+                .set(Select.field(Task::getAssignee), null)
                 .toModel();
     }
 }
