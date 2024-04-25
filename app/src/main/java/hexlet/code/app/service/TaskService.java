@@ -69,4 +69,11 @@ public class TaskService {
 
         return taskMapper.map(task);
     }
+
+    public void delete(Long id) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        taskRepository.delete(task);
+    }
 }
