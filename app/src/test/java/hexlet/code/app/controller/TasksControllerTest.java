@@ -87,7 +87,7 @@ public class TasksControllerTest {
 
         assertThatJson(body).and(
                 v -> v.node("id").isEqualTo(testTask.getId()),
-                v -> v.node("name").isEqualTo(testTask.getName())
+                v -> v.node("title").isEqualTo(testTask.getName())
         );
     }
 
