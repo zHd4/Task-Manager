@@ -97,6 +97,7 @@ public class TasksControllerTest {
 
         dto.setTitle("Test title");
         dto.setStatus("draft");
+        dto.setAssigneeId(1);
 
         MockHttpServletRequestBuilder request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
