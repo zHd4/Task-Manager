@@ -7,6 +7,7 @@ import hexlet.code.app.exception.ResourceAlreadyExistsException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.TaskStatusMapper;
 import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ import java.util.List;
 public class TaskStatusService {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Autowired
     private TaskStatusMapper taskStatusMapper;
@@ -62,6 +66,10 @@ public class TaskStatusService {
     public void delete(Long id) {
         TaskStatus status = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+
+        if (taskRepository.findByTaskStatus(status).isPresent()) {
+            throw new ResourceAlreadyExistsException("Status related with some task");
+        }
 
         taskStatusRepository.delete(status);
     }
