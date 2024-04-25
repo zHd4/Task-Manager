@@ -9,6 +9,7 @@ import hexlet.code.app.exception.ResourceForbiddenException;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.UserUtils;
 import org.openapitools.jackson.nullable.JsonNullable;
@@ -22,6 +23,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -100,6 +104,11 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         checkModificationAccess(user);
+
+        if (taskRepository.findByAssignee(user).isPresent()) {
+            throw new ResourceAlreadyExistsException("User related with some task");
+        }
+
         userRepository.delete(user);
     }
 }
