@@ -40,11 +40,11 @@ public class Task implements BaseEntity {
     private String description;
 
     @JoinColumn(name = "task_status_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private TaskStatus taskStatus;
 
     @JoinColumn(name = "assignee_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User assignee;
 
     @Column
