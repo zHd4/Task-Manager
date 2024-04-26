@@ -127,4 +127,10 @@ public class LabelsControllerTest {
 
         assertThat(labelRepository.findById(testLabel.getId())).isEmpty();
     }
+
+    @Test
+    public void testDefaultLabels() throws Exception {
+        assertThat(labelRepository.findByName("feature")).isPresent();
+        assertThat(labelRepository.findByName("bug")).isPresent();
+    }
 }
