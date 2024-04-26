@@ -2,6 +2,7 @@ package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.LabelCreateDTO;
+import hexlet.code.app.dto.LabelUpdateDTO;
 import hexlet.code.app.mapper.LabelMapper;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.repository.LabelRepository;
@@ -9,6 +10,7 @@ import hexlet.code.app.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +26,7 @@ import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -87,7 +90,7 @@ public class LabelsControllerTest {
     public void testCreate() throws Exception {
         LabelCreateDTO dto = new LabelCreateDTO();
 
-        dto.setName("test-label-name");
+        dto.setName("test-label");
 
         MockHttpServletRequestBuilder request = post("/api/labels")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +100,22 @@ public class LabelsControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isCreated());
 
-        Optional<Label> labelOptional = labelRepository.findByName(dto.getName());
-        assertThat(labelOptional).isPresent();
+        assertThat(labelRepository.findByName(dto.getName())).isPresent();
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        LabelUpdateDTO dto = new LabelUpdateDTO();
+        dto.setName(JsonNullable.of("new-label-name"));
+
+        MockHttpServletRequestBuilder request = put("/api/labels/{id}", testLabel.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto))
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        assertThat(labelRepository.findByName(dto.getName().get())).isPresent();
     }
 }
