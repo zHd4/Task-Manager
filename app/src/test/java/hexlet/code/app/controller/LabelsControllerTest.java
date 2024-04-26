@@ -43,6 +43,7 @@ public class LabelsControllerTest {
     @BeforeEach
     public void beforeEach() {
         testLabel = Instancio.of(modelGenerator.getLabelModel()).create();
+        labelRepository.save(testLabel);
     }
 
     @Test
@@ -57,5 +58,22 @@ public class LabelsControllerTest {
         String body = result.getResponse().getContentAsString();
 
         assertThatJson(body).isArray();
+    }
+
+    @Test
+    public void testShow() throws Exception {
+        MockHttpServletRequestBuilder request = get("/api/labels/{id}", testLabel.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).and(
+                v -> v.node("id").isEqualTo(testLabel.getId()),
+                v -> v.node("name").isEqualTo(testLabel.getName())
+        );
     }
 }
