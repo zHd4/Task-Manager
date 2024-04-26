@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +58,7 @@ public class TasksControllerTest {
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
 
         testTask.setTaskStatus(status);
+        testTask.setLabels(Set.of());
         taskRepository.save(testTask);
     }
 
