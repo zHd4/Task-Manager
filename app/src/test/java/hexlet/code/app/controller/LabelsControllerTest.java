@@ -20,10 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Optional;
-
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -117,5 +116,15 @@ public class LabelsControllerTest {
                 .andExpect(status().isOk());
 
         assertThat(labelRepository.findByName(dto.getName().get())).isPresent();
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", testLabel.getId())
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        mockMvc.perform(request).andExpect(status().isNoContent());
+
+        assertThat(labelRepository.findById(testLabel.getId())).isEmpty();
     }
 }
