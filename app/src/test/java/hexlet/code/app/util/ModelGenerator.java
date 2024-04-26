@@ -1,5 +1,6 @@
 package hexlet.code.app.util;
 
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
@@ -19,6 +20,7 @@ public class ModelGenerator {
     private Model<User> userModel;
     private Model<TaskStatus> taskStatusModel;
     private Model<Task> taskModel;
+    private Model<Label> labelModel;
 
     @PostConstruct
     private void init() {
@@ -41,6 +43,11 @@ public class ModelGenerator {
                 .supply(Select.field(Task::getName), () -> FAKER.text().text(10, 20))
                 .supply(Select.field(Task::getDescription), () -> FAKER.text().text())
                 .set(Select.field(Task::getAssignee), null)
+                .toModel();
+
+        labelModel = Instancio.of(Label.class)
+                .ignore(Select.field(Label::getId))
+                .supply(Select.field(Label::getName), () -> FAKER.text().text(3, 1000))
                 .toModel();
     }
 }
