@@ -145,7 +145,6 @@ public class TasksControllerTest {
 
         mockMvc.perform(request).andExpect(status().isNoContent());
 
-        Optional<Task> taskStatusOptional = taskRepository.findById(testTask.getId());
-        assertThat(taskStatusOptional).isEmpty();
+        assertThat(taskRepository.findById(testTask.getId())).isEmpty();
     }
 }
