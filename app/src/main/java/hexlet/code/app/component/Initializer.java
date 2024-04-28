@@ -1,10 +1,13 @@
 package hexlet.code.app.component;
 
+import hexlet.code.app.dto.LabelCreateDTO;
 import hexlet.code.app.dto.TaskStatusCreateDTO;
 import hexlet.code.app.dto.UserCreateDTO;
+import hexlet.code.app.mapper.LabelMapper;
 import hexlet.code.app.mapper.TaskStatusMapper;
 import hexlet.code.app.mapper.UserMapper;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +16,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +27,9 @@ public class Initializer implements ApplicationRunner {
     private TaskStatusRepository taskStatusRepository;
 
     @Autowired
+    private LabelRepository labelRepository;
+
+    @Autowired
     private DefaultUserProperties defaultUserProperties;
 
     @Autowired
@@ -35,12 +39,16 @@ public class Initializer implements ApplicationRunner {
     private TaskStatusMapper taskStatusMapper;
 
     @Autowired
+    private LabelMapper labelMapper;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         createDefaultUser();
         createDefaultTaskStatuses();
+        createDefaultLabels();
     }
 
     private void createDefaultUser() {
@@ -64,8 +72,6 @@ public class Initializer implements ApplicationRunner {
     }
 
     private void createDefaultTaskStatuses() {
-        List<String> slugs = List.of("draft", "to_review", "to_be_fixed", "to_publish", "published");
-
         TaskStatusCreateDTO draftDTO = new TaskStatusCreateDTO();
 
         draftDTO.setName("Draft");
@@ -96,5 +102,16 @@ public class Initializer implements ApplicationRunner {
         taskStatusRepository.save(taskStatusMapper.map(toBeFixedDTO));
         taskStatusRepository.save(taskStatusMapper.map(toPublishDTO));
         taskStatusRepository.save(taskStatusMapper.map(publishedDTO));
+    }
+
+    private void createDefaultLabels() {
+        LabelCreateDTO bugLabelDTO = new LabelCreateDTO();
+        bugLabelDTO.setName("bug");
+
+        LabelCreateDTO featureLabelDTO = new LabelCreateDTO();
+        featureLabelDTO.setName("feature");
+
+        labelRepository.save(labelMapper.map(bugLabelDTO));
+        labelRepository.save(labelMapper.map(featureLabelDTO));
     }
 }
