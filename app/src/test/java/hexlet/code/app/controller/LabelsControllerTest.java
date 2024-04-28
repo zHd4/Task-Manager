@@ -120,7 +120,7 @@ public class LabelsControllerTest {
 
     @Test
     public void testDelete() throws Exception {
-        MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", testLabel.getId())
+        MockHttpServletRequestBuilder request = delete("/api/labels/{id}", testLabel.getId())
                 .with(SecurityMockMvcRequestPostProcessors.user("user"));
 
         mockMvc.perform(request).andExpect(status().isNoContent());
