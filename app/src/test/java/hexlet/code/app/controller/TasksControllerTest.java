@@ -98,8 +98,8 @@ public class TasksControllerTest {
         TaskCreateDTO dto = new TaskCreateDTO();
 
         dto.setTitle("Test title");
-        dto.setStatus("draft");
-        dto.setAssigneeId(1);
+        dto.setStatus(JsonNullable.of("draft"));
+        dto.setAssigneeId(JsonNullable.of(1L));
 
         MockHttpServletRequestBuilder request = post("/api/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
