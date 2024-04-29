@@ -113,7 +113,7 @@ public class TasksControllerTest {
         assertThat(taskOptional).isPresent();
 
         Task task = taskOptional.get();
-        assertThat(task.getTaskStatus().getSlug()).isEqualTo(dto.getStatus());
+        assertThat(task.getTaskStatus().getSlug()).isEqualTo(dto.getStatus().get());
     }
 
     @Test
