@@ -5,16 +5,21 @@ import hexlet.code.app.dto.TaskDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.exception.ResourceNotFoundException;
 import hexlet.code.app.mapper.TaskMapper;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
 import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
 import hexlet.code.app.repository.UserRepository;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -23,6 +28,9 @@ public class TaskService {
 
     @Autowired
     private TaskStatusRepository taskStatusRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -58,6 +66,17 @@ public class TaskService {
                     .orElseThrow(() -> new ResourceNotFoundException("Task status not found"));
 
             task.setTaskStatus(status);
+        }
+
+        JsonNullable<Set<Long>> labelIds = taskData.getTaskLabelIds();
+
+        if (labelIds != null && labelIds.isPresent()) {
+            Set<Label> labels = labelIds.get().stream()
+                    .map(id -> labelRepository.findById(id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found")))
+                    .collect(Collectors.toSet());
+
+            task.setLabels(labels);
         }
 
         taskRepository.save(task);
