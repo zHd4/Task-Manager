@@ -6,7 +6,6 @@ import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import org.mapstruct.BeanMapping;
-import org.mapstruct.InheritConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
@@ -31,9 +30,6 @@ public abstract class TaskMapper {
     @Mapping(target = "taskStatus", ignore = true)
     public abstract Task map(TaskCreateDTO dto);
 
-    @InheritConfiguration(name = "map")
-    public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
-
     @Mapping(source = "name", target = "title")
     @Mapping(source = "description", target = "content")
     @Mapping(source = "taskStatus.slug", target = "status")
@@ -41,6 +37,13 @@ public abstract class TaskMapper {
     @Mapping(target = "taskLabelIds", expression = "java(labelsToLabelIds(model.getLabels()))")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL)
     public abstract TaskDTO map(Task model);
+
+    @Mapping(target = "assignee", ignore = true)
+    @Mapping(source = "title", target = "name")
+    @Mapping(source = "content", target = "description")
+    @Mapping(target = "labels", ignore = true)
+    @Mapping(target = "taskStatus", ignore = true)
+    public abstract void update(TaskUpdateDTO dto, @MappingTarget Task model);
 
     Set<Long> labelsToLabelIds(Set<Label> labels) {
         return labels.stream()
