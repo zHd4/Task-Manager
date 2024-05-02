@@ -1,8 +1,8 @@
 <h1>Task Manager</h1>
 
-<p>Task Manager – task management system It allows you to set tasks, assign executors and change their statuses.
+<p>Task Manager – task management system based on Spring.
+It allows you to set tasks, assign executors and change their statuses.
 Registration and authentication are required.</p>
-
 <p>
 <a href="https://github.com/zHd4/java-project-99/actions"><img src="https://github.com/zHd4/java-project-99/actions/workflows/hexlet-check.yml/badge.svg"  alt="hexlet-check" /></a>
 <a href="https://github.com/zHd4/java-project-99/actions/workflows/main.yml"><img src="https://github.com/zHd4/java-project-99/actions/workflows/main.yml/badge.svg"  alt="Java CI"/></a>
