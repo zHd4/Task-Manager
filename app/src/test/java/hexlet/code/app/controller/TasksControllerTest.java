@@ -3,6 +3,7 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskCreateDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
+import hexlet.code.app.mapper.TaskMapper;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
@@ -44,6 +45,9 @@ public class TasksControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private TaskMapper taskMapper;
 
     @Autowired
     private ModelGenerator modelGenerator;
@@ -116,7 +120,7 @@ public class TasksControllerTest {
 
         String body = result.getResponse().getContentAsString();
 
-        assertThatJson(body).isArray().containsAnyOf("{id: \"" + testTask.getId() + "\"}");
+        assertThatJson(body).isArray().contains(objectMapper.writeValueAsString(taskMapper.map(testTask)));
     }
 
     @Test
