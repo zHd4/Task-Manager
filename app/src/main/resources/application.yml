@@ -15,6 +15,10 @@ spring:
 server:
   address: 0.0.0.0
 
+sentry:
+  dsn: https://27a365bc59b46a689a0b54b9f46890f7@o4507188099743744.ingest.de.sentry.io/4507188110360656
+  traces-sample-rate: 1.0
+
 rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
