@@ -3,10 +3,14 @@ package hexlet.code.app.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskCreateDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
+import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
 import hexlet.code.app.model.TaskStatus;
+import hexlet.code.app.model.User;
+import hexlet.code.app.repository.LabelRepository;
 import hexlet.code.app.repository.TaskRepository;
 import hexlet.code.app.repository.TaskStatusRepository;
+import hexlet.code.app.repository.UserRepository;
 import hexlet.code.app.util.ModelGenerator;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,15 +54,30 @@ public class TasksControllerTest {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
+
     private Task testTask;
 
     @BeforeEach
     public void beforeEach() {
+        User assignee = userRepository.findById(1L).get();
         TaskStatus status = taskStatusRepository.findBySlug("draft").get();
+
+        Set<Label> labels = Set.of(
+                labelRepository.findByName("bug").get(),
+                labelRepository.findByName("feature").get()
+        );
+
         testTask = Instancio.of(modelGenerator.getTaskModel()).create();
 
+        testTask.setAssignee(assignee);
         testTask.setTaskStatus(status);
-        testTask.setLabels(Set.of());
+        testTask.setLabels(labels);
+
         taskRepository.save(testTask);
     }
 
@@ -74,6 +93,11 @@ public class TasksControllerTest {
         String body = result.getResponse().getContentAsString();
 
         assertThatJson(body).isArray();
+    }
+
+    @Test
+    public void testFilter() throws Exception {
+
     }
 
     @Test
