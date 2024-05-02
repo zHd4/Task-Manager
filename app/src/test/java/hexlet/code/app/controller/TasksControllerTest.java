@@ -2,6 +2,7 @@ package hexlet.code.app.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.app.dto.TaskCreateDTO;
+import hexlet.code.app.dto.TaskFilterDTO;
 import hexlet.code.app.dto.TaskUpdateDTO;
 import hexlet.code.app.model.Label;
 import hexlet.code.app.model.Task;
@@ -97,7 +98,26 @@ public class TasksControllerTest {
 
     @Test
     public void testFilter() throws Exception {
+        String titleCont = testTask.getName().substring(0, testTask.getName().length() / 2);
+        long assigneeId = testTask.getAssignee().getId();
 
+        String status = testTask.getTaskStatus().getSlug();
+        long labelId = testTask.getLabels().stream().findFirst().get().getId();
+
+        MockHttpServletRequestBuilder request = get("/api/tasks")
+                .param("titleCont", titleCont)
+                .param("assigneeId", Long.toString(assigneeId))
+                .param("status", status)
+                .param("labelId", Long.toString(labelId))
+                .with(SecurityMockMvcRequestPostProcessors.user("user"));
+
+        MvcResult result = mockMvc.perform(request)
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+
+        assertThatJson(body).isArray().containsAnyOf("{id: \"" + testTask.getId() + "\"}");
     }
 
     @Test
