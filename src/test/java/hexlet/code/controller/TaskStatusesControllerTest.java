@@ -122,7 +122,9 @@ public class TaskStatusesControllerTest {
         taskStatusRepository.save(testTaskStatus);
 
         TaskStatusUpdateDTO dto = new TaskStatusUpdateDTO();
+
         dto.setName(JsonNullable.of(FAKER.text().text(4, 7)));
+        dto.setSlug(JsonNullable.of(FAKER.text().text(4, 7)));
 
         MockHttpServletRequestBuilder request = put("/api/task_statuses/{id}", testTaskStatus.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -138,7 +140,7 @@ public class TaskStatusesControllerTest {
         TaskStatus status = taskStatusOptional.get();
 
         assertThat(status.getName()).isEqualTo(dto.getName().get());
-        assertThat(status.getSlug()).isEqualTo(testTaskStatus.getSlug());
+        assertThat(status.getSlug()).isEqualTo(dto.getSlug().get());
     }
 
     @Test
