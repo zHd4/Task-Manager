@@ -23,6 +23,6 @@ rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
 
-user:
-  email: 'hexlet@example.com'
-  password: 'qwerty'
+#user:
+#  email: 'hexlet@example.com'
+#  password: 'qwerty'
