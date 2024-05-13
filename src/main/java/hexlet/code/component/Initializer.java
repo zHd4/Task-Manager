@@ -52,8 +52,7 @@ public class Initializer implements ApplicationRunner {
     }
 
     private void createDefaultUser() {
-        String email = "hexlet@example.com";
-//        String email = defaultUserProperties.getEmail();
+        String email = defaultUserProperties.getEmail();
 
         if (userRepository.findByEmail(email).isEmpty()) {
             UserCreateDTO userData = new UserCreateDTO();
@@ -62,8 +61,7 @@ public class Initializer implements ApplicationRunner {
             userData.setLastName("Doe");
             userData.setEmail(email);
 
-            String password = "qwerty";
-//            String password = defaultUserProperties.getPassword();
+            String password = defaultUserProperties.getPassword();
             String passwordDigest = passwordEncoder.encode(password);
 
             userData.setPassword(passwordDigest);
