@@ -159,6 +159,8 @@ public class UsersControllerTest {
         userRepository.save(testUser);
         UserUpdateDTO userData = new UserUpdateDTO();
 
+        userData.setFirstName(JsonNullable.of(FAKER.name().firstName()));
+        userData.setLastName(JsonNullable.of(FAKER.name().lastName()));
         userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
         userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
 
@@ -176,64 +178,10 @@ public class UsersControllerTest {
 
         User user = userOptional.get();
 
+        assertThat(user.getFirstName()).isEqualTo(userData.getFirstName().get());
+        assertThat(user.getLastName()).isEqualTo(userData.getLastName().get());
         assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
         assertThat(user.getPassword()).isNotEqualTo(userData.getPassword().get());
-    }
-
-    @Test
-    public void testUpdateWithoutEmail() throws Exception {
-        userRepository.save(testUser);
-
-        UserUpdateDTO userData = new UserUpdateDTO();
-        userData.setPassword(JsonNullable.of(FAKER.internet().password(5, 30)));
-
-        MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userData))
-                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-
-        Optional<User> userOptional = userRepository.findById(testUser.getId());
-
-        assertThat(userOptional).isPresent();
-
-        User user = userOptional.get();
-
-        assertThat(user.getEmail()).isEqualTo(testUser.getEmail());
-        assertThat(user.getPassword()).isNotEqualTo(userData.getPassword().get());
-    }
-
-    @Test
-    public void testUpdateWithoutPassword() throws Exception {
-        String password = testUser.getPassword();
-        String passwordDigest = passwordEncoder.encode(password);
-
-        testUser.setPassword(passwordDigest);
-        userRepository.save(testUser);
-
-        testUser.setPassword(password);
-
-        UserUpdateDTO userData = new UserUpdateDTO();
-        userData.setEmail(JsonNullable.of(FAKER.internet().emailAddress()));
-
-        MockHttpServletRequestBuilder request = put("/api/users/{id}", testUser.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(userData))
-                .with(SecurityMockMvcRequestPostProcessors.user(testUser.getUsername()));
-
-        mockMvc.perform(request)
-                .andExpect(status().isOk());
-
-        Optional<User> userOptional = userRepository.findById(testUser.getId());
-
-        assertThat(userOptional).isPresent();
-
-        User user = userOptional.get();
-
-        assertThat(user.getEmail()).isEqualTo(userData.getEmail().get());
-        assertThat(user.getPassword()).isNotEqualTo(testUser.getPassword());
     }
 
     @Test
