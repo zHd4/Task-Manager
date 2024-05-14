@@ -17,7 +17,7 @@ configurations {
 }
 
 application {
-	mainClass.set("hexlet.code.app.AppApplication")
+	mainClass.set("hexlet.code.AppApplication")
 }
 
 repositories {
