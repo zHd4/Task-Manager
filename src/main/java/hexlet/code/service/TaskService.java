@@ -62,14 +62,14 @@ public class TaskService {
     public TaskDTO create(TaskCreateDTO taskData) {
         Task task = taskMapper.map(taskData);
 
-        if (taskData.getAssigneeId() != null && taskData.getAssigneeId().isPresent()) {
+        if (taskData.getAssigneeId() != null && taskData.getAssigneeId().get() != null) {
             User assignee = userRepository.findById(taskData.getAssigneeId().get())
                     .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
             task.setAssignee(assignee);
         }
 
-        if (taskData.getStatus() != null && taskData.getStatus().isPresent()) {
+        if (taskData.getStatus() != null && taskData.getStatus().get() != null) {
             TaskStatus status = taskStatusRepository.findBySlug(taskData.getStatus().get())
                     .orElseThrow(() -> new ResourceNotFoundException("Task status not found"));
 
