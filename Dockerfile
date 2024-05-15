@@ -1,5 +1,15 @@
-FROM gradle:7.4.0-jdk17
+FROM eclipse-temurin:20-jdk
 
-RUN ./gradlew installDist
+ARG GRADLE_VERSION=8.7
 
-CMD ./build/install/app/bin/app
+RUN apt-get update && apt-get install -yq make unzip
+
+WORKDIR /app
+
+COPY ./ .
+
+RUN ./gradlew --no-daemon build
+
+EXPOSE 8080
+
+CMD java -jar build/libs/app-0.0.1-SNAPSHOT.jar
