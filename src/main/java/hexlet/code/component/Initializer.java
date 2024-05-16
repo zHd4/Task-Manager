@@ -52,66 +52,72 @@ public class Initializer implements ApplicationRunner {
     }
 
     private void createDefaultUser() {
-        String email = defaultUserProperties.getEmail();
+        if (userRepository.findAll().isEmpty()) {
+            String email = defaultUserProperties.getEmail();
 
-        if (userRepository.findByEmail(email).isEmpty()) {
-            UserCreateDTO userData = new UserCreateDTO();
+            if (userRepository.findByEmail(email).isEmpty()) {
+                UserCreateDTO userData = new UserCreateDTO();
 
-            userData.setFirstName("John");
-            userData.setLastName("Doe");
-            userData.setEmail(email);
+                userData.setFirstName("John");
+                userData.setLastName("Doe");
+                userData.setEmail(email);
 
-            String password = defaultUserProperties.getPassword();
-            String passwordDigest = passwordEncoder.encode(password);
+                String password = defaultUserProperties.getPassword();
+                String passwordDigest = passwordEncoder.encode(password);
 
-            userData.setPassword(passwordDigest);
+                userData.setPassword(passwordDigest);
 
-            User user = userMapper.map(userData);
-            userRepository.save(user);
+                User user = userMapper.map(userData);
+                userRepository.save(user);
+            }
         }
     }
 
     private void createDefaultTaskStatuses() {
-        TaskStatusCreateDTO draftDTO = new TaskStatusCreateDTO();
+        if (taskStatusRepository.findAll().isEmpty()) {
+            TaskStatusCreateDTO draftDTO = new TaskStatusCreateDTO();
 
-        draftDTO.setName("Draft");
-        draftDTO.setSlug("draft");
+            draftDTO.setName("Draft");
+            draftDTO.setSlug("draft");
 
-        TaskStatusCreateDTO toViewDTO = new TaskStatusCreateDTO();
+            TaskStatusCreateDTO toViewDTO = new TaskStatusCreateDTO();
 
-        toViewDTO.setName("To view");
-        toViewDTO.setSlug("to_review");
+            toViewDTO.setName("To view");
+            toViewDTO.setSlug("to_review");
 
-        TaskStatusCreateDTO toBeFixedDTO = new TaskStatusCreateDTO();
+            TaskStatusCreateDTO toBeFixedDTO = new TaskStatusCreateDTO();
 
-        toBeFixedDTO.setName("To be fixed");
-        toBeFixedDTO.setSlug("to_be_fixed");
+            toBeFixedDTO.setName("To be fixed");
+            toBeFixedDTO.setSlug("to_be_fixed");
 
-        TaskStatusCreateDTO toPublishDTO = new TaskStatusCreateDTO();
+            TaskStatusCreateDTO toPublishDTO = new TaskStatusCreateDTO();
 
-        toPublishDTO.setName("To publish");
-        toPublishDTO.setSlug("to_publish");
+            toPublishDTO.setName("To publish");
+            toPublishDTO.setSlug("to_publish");
 
-        TaskStatusCreateDTO publishedDTO = new TaskStatusCreateDTO();
+            TaskStatusCreateDTO publishedDTO = new TaskStatusCreateDTO();
 
-        publishedDTO.setName("Published");
-        publishedDTO.setSlug("published");
+            publishedDTO.setName("Published");
+            publishedDTO.setSlug("published");
 
-        taskStatusRepository.save(taskStatusMapper.map(draftDTO));
-        taskStatusRepository.save(taskStatusMapper.map(toViewDTO));
-        taskStatusRepository.save(taskStatusMapper.map(toBeFixedDTO));
-        taskStatusRepository.save(taskStatusMapper.map(toPublishDTO));
-        taskStatusRepository.save(taskStatusMapper.map(publishedDTO));
+            taskStatusRepository.save(taskStatusMapper.map(draftDTO));
+            taskStatusRepository.save(taskStatusMapper.map(toViewDTO));
+            taskStatusRepository.save(taskStatusMapper.map(toBeFixedDTO));
+            taskStatusRepository.save(taskStatusMapper.map(toPublishDTO));
+            taskStatusRepository.save(taskStatusMapper.map(publishedDTO));
+        }
     }
 
     private void createDefaultLabels() {
-        LabelCreateDTO bugLabelDTO = new LabelCreateDTO();
-        bugLabelDTO.setName("bug");
+        if (labelRepository.findAll().isEmpty()) {
+            LabelCreateDTO bugLabelDTO = new LabelCreateDTO();
+            bugLabelDTO.setName("bug");
 
-        LabelCreateDTO featureLabelDTO = new LabelCreateDTO();
-        featureLabelDTO.setName("feature");
+            LabelCreateDTO featureLabelDTO = new LabelCreateDTO();
+            featureLabelDTO.setName("feature");
 
-        labelRepository.save(labelMapper.map(bugLabelDTO));
-        labelRepository.save(labelMapper.map(featureLabelDTO));
+            labelRepository.save(labelMapper.map(bugLabelDTO));
+            labelRepository.save(labelMapper.map(featureLabelDTO));
+        }
     }
 }
