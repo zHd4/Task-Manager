@@ -62,30 +62,7 @@ public class TaskService {
     public TaskDTO create(TaskCreateDTO taskData) {
         Task task = taskMapper.map(taskData);
 
-        if (taskData.getAssigneeId() != null && taskData.getAssigneeId().get() != null) {
-            User assignee = userRepository.findById(taskData.getAssigneeId().get())
-                    .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-            task.setAssignee(assignee);
-        }
-
-        if (taskData.getStatus() != null && taskData.getStatus().get() != null) {
-            TaskStatus status = taskStatusRepository.findBySlug(taskData.getStatus().get())
-                    .orElseThrow(() -> new ResourceNotFoundException("Task status not found"));
-
-            task.setTaskStatus(status);
-        }
-
-        JsonNullable<Set<Long>> labelIds = taskData.getTaskLabelIds();
-
-        if (labelIds != null && labelIds.isPresent()) {
-            Set<Label> labels = labelIds.get().stream()
-                    .map(id -> labelRepository.findById(id)
-                            .orElseThrow(() -> new ResourceNotFoundException("Label with id " + id + " not found")))
-                    .collect(Collectors.toSet());
-
-            task.setLabels(labels);
-        }
+        setData(task, taskData);
 
         taskRepository.save(task);
         return taskMapper.map(task);
@@ -95,6 +72,8 @@ public class TaskService {
     public TaskDTO update(Long id, TaskUpdateDTO taskData) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+
+        setData(task, taskData);
 
         taskMapper.update(taskData, task);
         taskRepository.save(task);
@@ -107,5 +86,42 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
 
         taskRepository.delete(task);
+    }
+
+    private void setData(Task task, TaskCreateDTO dto) {
+        setData(task, dto.getAssigneeId(), dto.getStatus(), dto.getTaskLabelIds());
+    }
+
+    private void setData(Task task, TaskUpdateDTO dto) {
+        setData(task, dto.getAssigneeId(), dto.getStatus(), dto.getTaskLabelIds());
+    }
+
+    private void setData(Task task,
+                         JsonNullable<Long> assigneeId,
+                         JsonNullable<String> status,
+                         JsonNullable<Set<Long>> labelIds) {
+        if (assigneeId != null && assigneeId.get() != null) {
+            User newAssignee = userRepository.findById(assigneeId.get())
+                    .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
+
+            task.setAssignee(newAssignee);
+        }
+
+        if (status != null && status.get() != null) {
+            TaskStatus newStatus = taskStatusRepository.findBySlug(status.get())
+                    .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+
+            task.setTaskStatus(newStatus);
+        }
+
+        if (labelIds != null && labelIds.get() != null) {
+            Set<Label> newLabels = labelIds.get().stream()
+                    .map(labelId -> labelRepository.findById(labelId)
+                            .orElseThrow(() ->
+                                    new ResourceNotFoundException("Label with id=" + labelId + " not found")))
+                    .collect(Collectors.toSet());
+
+            task.setLabels(newLabels);
+        }
     }
 }
