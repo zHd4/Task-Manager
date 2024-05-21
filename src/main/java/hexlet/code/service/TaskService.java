@@ -105,7 +105,7 @@ public class TaskService {
         TaskStatus newStatus = null;
         Set<Label> newLabels = new HashSet<>();
 
-        if (assigneeId != null && assigneeId.get() != null) {
+        if (assigneeId != null && assigneeId.get() != null && assigneeId.get() != 0) {
             newAssignee = userRepository.findById(assigneeId.get())
                     .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
         }
