@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Mapper(
         uses = { JsonNullableMapper.class, ReferenceMapper.class },
         componentModel = MappingConstants.ComponentModel.SPRING,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class TaskMapper {
