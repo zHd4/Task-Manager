@@ -101,30 +101,66 @@ public class TaskService {
                          JsonNullable<Long> assigneeId,
                          JsonNullable<String> status,
                          JsonNullable<Set<Long>> labelIds) {
-        User newAssignee = null;
-        TaskStatus newStatus = null;
-        Set<Label> newLabels = new HashSet<>();
+//        User newAssignee = null;
+//        TaskStatus newStatus = null;
+//        Set<Label> newLabels = new HashSet<>();
+//
+//        if (assigneeId != null && assigneeId.get() != null && assigneeId.get() != 0) {
+//            newAssignee = userRepository.findById(assigneeId.get())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
+//        }
+//
+//        if (status != null && status.get() != null) {
+//            newStatus = taskStatusRepository.findBySlug(status.get())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+//        }
+//
+//        if (labelIds != null && labelIds.get() != null) {
+//            newLabels = labelIds.get().stream()
+//                    .map(labelId -> labelRepository.findById(labelId)
+//                            .orElseThrow(() ->
+//                                    new ResourceNotFoundException("Label with id=" + labelId + " not found")))
+//                    .collect(Collectors.toSet());
+//        }
+//
+//        task.setAssignee(newAssignee);
+//        task.setTaskStatus(newStatus);
+//        task.setLabels(newLabels);
 
-        if (assigneeId != null && assigneeId.get() != null && assigneeId.get() != 0) {
-            newAssignee = userRepository.findById(assigneeId.get())
-                    .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
+        if (assigneeId != null) {
+            User newAssignee = null;
+
+            if (assigneeId.get() != null && assigneeId.get() != 0) {
+                newAssignee = userRepository.findById(assigneeId.get())
+                        .orElseThrow(() -> new ResourceNotFoundException("Assignee not found"));
+            }
+
+            task.setAssignee(newAssignee);
         }
 
-        if (status != null && status.get() != null) {
-            newStatus = taskStatusRepository.findBySlug(status.get())
-                    .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+        if (status != null) {
+            TaskStatus newStatus = null;
+
+            if (status.get() != null) {
+                newStatus = taskStatusRepository.findBySlug(status.get())
+                        .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+            }
+
+            task.setTaskStatus(newStatus);
         }
 
-        if (labelIds != null && labelIds.get() != null) {
-            newLabels = labelIds.get().stream()
-                    .map(labelId -> labelRepository.findById(labelId)
-                            .orElseThrow(() ->
-                                    new ResourceNotFoundException("Label with id=" + labelId + " not found")))
-                    .collect(Collectors.toSet());
-        }
+        if (labelIds != null) {
+            Set<Label> newLabels = new HashSet<>();
 
-        task.setAssignee(newAssignee);
-        task.setTaskStatus(newStatus);
-        task.setLabels(newLabels);
+            if (labelIds.get() != null) {
+                newLabels = labelIds.get().stream()
+                        .map(labelId -> labelRepository.findById(labelId)
+                                .orElseThrow(() ->
+                                        new ResourceNotFoundException("Label with id=" + labelId + " not found")))
+                        .collect(Collectors.toSet());
+            }
+
+            task.setLabels(newLabels);
+        }
     }
 }
