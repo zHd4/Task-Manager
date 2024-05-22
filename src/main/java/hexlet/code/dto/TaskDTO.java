@@ -1,6 +1,6 @@
 package hexlet.code.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+//import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.CUSTOM)
+//@JsonInclude(JsonInclude.Include.CUSTOM)
 public class TaskDTO {
     private long id;
     private long index;
