@@ -7,7 +7,7 @@ plugins {
 	id("io.sentry.jvm.gradle") version "4.5.1"
 }
 
-group = "hexlet.code"
+group = "zhd4.taskmanager"
 version = "0.0.1-SNAPSHOT"
 
 configurations {
@@ -17,7 +17,7 @@ configurations {
 }
 
 application {
-	mainClass.set("hexlet.code.AppApplication")
+	mainClass.set("zhd4.taskmanager.AppApplication")
 }
 
 repositories {
