@@ -6,8 +6,8 @@ import com.zhd4.taskmanager.dto.LabelUpdateDTO;
 import com.zhd4.taskmanager.mapper.LabelMapper;
 import com.zhd4.taskmanager.model.Label;
 import com.zhd4.taskmanager.repository.LabelRepository;
-import org.assertj.core.api.Assertions;
 import com.zhd4.taskmanager.util.ModelGenerator;
+import org.assertj.core.api.Assertions;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
