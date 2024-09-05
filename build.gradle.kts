@@ -6,7 +6,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.4"
 }
 
-group = "zhd4.taskmanager"
+group = "com.zhd4.taskmanager"
 version = "0.0.1-SNAPSHOT"
 
 configurations {
@@ -16,7 +16,7 @@ configurations {
 }
 
 application {
-	mainClass.set("zhd4.taskmanager.AppApplication")
+	mainClass.set("com.zhd4.taskmanager.AppApplication")
 }
 
 repositories {
