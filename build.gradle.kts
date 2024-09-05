@@ -4,7 +4,6 @@ plugins {
 	jacoco
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
-	id("io.sentry.jvm.gradle") version "4.5.1"
 }
 
 group = "zhd4.taskmanager"
@@ -60,18 +59,6 @@ dependencies {
 
 	runtimeOnly("com.h2database:h2")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-}
-
-sentry {
-	includeSourceContext = true
-
-	org = "my-company-x45"
-	projectName = "java-project-99"
-	authToken = System.getenv("SENTRY_AUTH_TOKEN")
-}
-
-tasks.sentryBundleSourcesJava {
-	enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
 
 tasks.withType<Test> {
