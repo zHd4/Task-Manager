@@ -13,12 +13,17 @@ jobs:
         with:
           java-version: '22'
           distribution: 'temurin'
-      - run: |
+
+      - name: Generate RSA Key Pair with OpenSSL
+        run: |
           echo "Generating certs..."
           mkdir src/main/resources/certs
           openssl genrsa -out src/main/resources/certs/private.pem 2048
           openssl rsa -in src/main/resources/certs/private.pem -outform PEM -pubout -out src/main/resources/certs/public.pem
-      - run: ./gradlew build
+
+      - name: Building
+        run: ./gradlew build
+
       - uses: paambaati/codeclimate-action@v5.0.0
         env:
           CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
