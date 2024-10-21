@@ -10,6 +10,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class DefaultUserProperties {
-    private String email = "hexlet@example.com";
+    private String email = "admin@example.com";
     private String password = "qwerty";
 }
