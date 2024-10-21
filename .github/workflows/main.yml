@@ -17,6 +17,10 @@ jobs:
         with:
           java-version: '22'
           distribution: 'temurin'
+      - run: |
+          mkdir src/main/resources/certs
+          openssl genrsa -out src/main/resources/certs/private.pem 2048
+          openssl rsa -in src/main/resources/certs/private.pem -outform PEM -pubout -out src/main/resources/certs/public.pem
       - run: ./gradlew build
       - uses: paambaati/codeclimate-action@v5.0.0
         env:
