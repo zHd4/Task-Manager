@@ -9,5 +9,6 @@ Registration and authentication are required.</p>
 <a href="https://codeclimate.com/github/zHd4/java-project-99/test_coverage"><img src="https://api.codeclimate.com/v1/badges/06426a13b4c18e0e737a/test_coverage"  alt="Test coverage"/></a>
 </p>
 
-<img alt="Tasks" src=".images/tasks.jpg" />
-<img alt="Users" src=".images/users.jpg" />
+[//]: # (<img alt="Tasks" src=".images/tasks.jpg" />)
+
+[//]: # (<img alt="Users" src=".images/users.jpg" />)
