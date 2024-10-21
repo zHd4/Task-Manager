@@ -6,10 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "user")
+//@ConfigurationProperties(prefix = "user")
 @Getter
 @Setter
 public class DefaultUserProperties {
-    private String email;
-    private String password;
+    private String email = "admin@example.com";
+    private String password = "qwerty";
 }
