@@ -17,6 +17,8 @@ Registration and authentication are required.</p>
 <p>The following commands prepare and run Task Manager.</p>
 
 ```bash
+mkdir src/main/resources/certs
+
 # Generate RSA keys
 openssl genrsa -out src/main/resources/certs/private.pem 2048
 openssl rsa -in src/main/resources/certs/private.pem -outform PEM -pubout -out src/main/resources/certs/public.pem
