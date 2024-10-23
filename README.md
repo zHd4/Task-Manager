@@ -26,4 +26,4 @@ openssl rsa -in src/main/resources/certs/private.pem -outform PEM -pubout -out s
 ./gradlew bootRun
 ```
 
-<p>After that you can access it on http://localhost:8080</p>
+<p>After that you can access it on <a href="http://localhost:8080">localhost:8080</a></p>
